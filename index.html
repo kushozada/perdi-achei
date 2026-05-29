@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<!-- Declaração do tipo de documento: informa ao navegador que este é um HTML5 moderno. -->
+<html lang="pt-BR">
+<!-- O atributo lang="pt-BR" melhora acessibilidade e ajuda leitores de tela e buscadores. -->
+<head>
+  <!-- O <head> contém metadados (informações sobre a página) que não aparecem visualmente. -->
+
+  <!-- Define o conjunto de caracteres como UTF-8, suportando acentos e caracteres especiais. -->
+  <meta charset="UTF-8" />
+
+  <!-- viewport: faz a página se ajustar corretamente em dispositivos móveis (responsividade). -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Título exibido na aba do navegador. -->
+  <title>Perdi & Achei | Central de Achados e Perdidos</title>
+
+  <!-- Vincula o arquivo de estilos CSS externo à página. -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- O <body> contém todo o conteúdo visível da página. -->
+
+  <!-- SEÇÃO HERO: cabeçalho visual de destaque com fundo colorido e navegação.
+       O id="inicio" permite que links internos como href="#inicio" rolem até aqui. -->
+  <header class="hero" id="inicio">
+
+    <!-- Barra de navegação: logo + links para as seções da página. -->
+    <nav class="nav">
+      <!-- Link da marca/logo; rola a página de volta ao início. -->
+      <a class="marca" href="#inicio" aria-label="Voltar ao início">
+        <!-- O atributo alt="" vazio indica que a imagem é decorativa (a logo já tem texto ao lado). -->
+        <img src="assets/logo-perdi-achei.svg" alt="" class="marca-img" />
+        <span>Perdi & Achei</span>
+      </a>
+
+      <!-- Links de âncora (#) para rolar suavemente até cada seção da página. -->
+      <div class="nav-links" aria-label="Navegação principal">
+        <a href="#cadastro">Cadastrar</a>
+        <a href="#registros">Registros</a>
+        <a href="#fluxo">Fluxo dos dados</a>
+      </div>
+    </nav>
+
+    <!-- Conteúdo central do hero: texto de apresentação + card de métricas. -->
+    <section class="hero-conteudo">
+      <div class="hero-texto">
+        <!-- Badge informativo que destaca as tecnologias usadas no projeto. -->
+        <span class="badge">Projeto prático • HTML + CSS + JS + PHP + JSON</span>
+        <h1>Perdeu? Achou? Registre aqui.</h1>
+        <p>
+          Uma central simples para cadastrar objetos perdidos ou encontrados na faculdade.
+          O formulário envia os dados para o servidor, o PHP salva em JSON e a página exibe os registros.
+        </p>
+
+        <!-- Botões de ação que levam o usuário às seções principais. -->
+        <div class="acoes">
+          <a href="#cadastro" class="btn btn-principal">Cadastrar objeto</a>
+          <a href="#registros" class="btn btn-secundario">Ver registros</a>
+        </div>
+      </div>
+
+      <!-- Card lateral com imagem ilustrativa e métricas do sistema. -->
+      <aside class="hero-card" aria-label="Resumo do sistema">
+        <img src="assets/hero-achados-perdidos.svg" alt="Ilustração de objetos perdidos e encontrados" />
+        <div class="hero-metricas">
+          <!-- O id="totalRegistros" é atualizado dinamicamente pelo script.js
+               para exibir o número atual de itens cadastrados. -->
+          <div>
+            <strong id="totalRegistros">0</strong>
+            <span>registros</span>
+          </div>
+          <!-- Informa que o armazenamento é feito em JSON (sem banco de dados). -->
+          <div>
+            <strong>JSON</strong>
+            <span>armazenamento</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL: formulário de cadastro + lista de registros. -->
+  <main class="container">
+
+    <!-- Grade com dois cards lado a lado: cadastro (esquerda) e lista (direita). -->
+    <section class="grid-principal">
+
+      <!-- CARD DE CADASTRO: contém o formulário para registrar um objeto. -->
+      <article class="card" id="cadastro">
+        <div class="card-cabecalho">
+          <img src="assets/formulario.svg" alt="" />
+          <div>
+            <h2>Cadastrar objeto</h2>
+            <p>Informe os dados do item perdido ou encontrado.</p>
+          </div>
+        </div>
+
+        <!-- Formulário de cadastro.
+             - id="formObjeto": identificado pelo JavaScript para capturar o evento de envio.
+             - autocomplete="off": evita que o navegador sugira valores anteriores. -->
+        <form id="formObjeto" autocomplete="off">
+
+          <!-- Cada <label> envolve seu campo para melhorar a acessibilidade:
+               clicar no texto do label já foca o campo correspondente. -->
+          <label>
+            Nome do objeto
+            <!-- required: campo obrigatório (validação nativa do navegador).
+                 maxlength: limita o número de caracteres digitados. -->
+            <input type="text" name="objeto" required maxlength="80" placeholder="Ex: mochila, chave, fone, carteira" />
+          </label>
+
+          <!-- Dois campos lado a lado usando CSS grid (.duas-colunas). -->
+          <div class="duas-colunas">
+            <label>
+              Tipo
+              <!-- O <select> apresenta opções fixas; o valor vazio serve como placeholder. -->
+              <select name="tipo" required>
+                <option value="">Selecione</option>
+                <option value="perdido">Perdido</option>
+                <option value="encontrado">Encontrado</option>
+              </select>
+            </label>
+
+            <label>
+              Data
+              <!-- type="date" exibe um seletor de data nativo do navegador. -->
+              <input type="date" name="data" required />
+            </label>
+          </div>
+
+          <label>
+            Local
+            <input type="text" name="local" required maxlength="100" placeholder="Ex: Laboratório 2, biblioteca, pátio" />
+          </label>
+
+          <label>
+            Descrição
+            <!-- <textarea> permite texto longo em múltiplas linhas. -->
+            <textarea name="descricao" required maxlength="350" placeholder="Descreva cor, marca, detalhes e outras informações importantes"></textarea>
+          </label>
+
+          <label>
+            Contato
+            <input type="text" name="contato" required maxlength="100" placeholder="E-mail, WhatsApp ou RA" />
+          </label>
+
+          <!-- Botão de envio; o JavaScript intercepta este submit e envia via fetch (AJAX). -->
+          <button class="btn btn-form" type="submit">Salvar registro</button>
+        </form>
+
+        <!-- Área onde o JavaScript exibe mensagens de sucesso ou erro após o envio.
+             role="status" e aria-live="polite" fazem leitores de tela anunciarem a mensagem. -->
+        <div id="mensagem" class="mensagem" role="status" aria-live="polite"></div>
+      </article>
+
+      <!-- CARD DE REGISTROS: exibe os itens cadastrados, carregados pelo PHP via fetch. -->
+      <article class="card" id="registros">
+        <div class="card-cabecalho">
+          <img src="assets/lista.svg" alt="" />
+          <div>
+            <h2>Registros cadastrados</h2>
+            <p>Lista carregada do arquivo JSON por meio do PHP.</p>
+          </div>
+        </div>
+
+        <!-- Barra com botões de filtro e botão de atualização. -->
+        <div class="barra-acoes">
+          <!-- Filtros: cada botão tem data-filtro com o valor que será lido pelo JavaScript
+               para filtrar os registros exibidos (todos / perdido / encontrado). -->
+          <div class="filtros" aria-label="Filtros de registros">
+            <button type="button" class="filtro ativo" data-filtro="todos">Todos</button>
+            <button type="button" class="filtro" data-filtro="perdido">Perdidos</button>
+            <button type="button" class="filtro" data-filtro="encontrado">Encontrados</button>
+          </div>
+
+          <!-- Botão para recarregar os registros do servidor sem recarregar a página inteira. -->
+          <button type="button" class="btn-atualizar" id="btnAtualizar">Atualizar</button>
+        </div>
+
+        <!-- Contêiner vazio: o JavaScript insere os cards de cada registro aqui dinamicamente. -->
+        <div id="listaRegistros" class="lista"></div>
+      </article>
+    </section>
+
+    <!-- SEÇÃO FLUXO: mostra didaticamente o percurso dos dados (HTML → JS → PHP → JSON). -->
+    <section class="fluxo card" id="fluxo">
+      <div>
+        <h2>Fluxo dos dados</h2>
+        <p>
+          Nesta aula, o objetivo é visualizar o caminho completo da informação:
+          do formulário no navegador até o arquivo JSON no servidor.
+        </p>
+      </div>
+
+      <!-- Diagrama SVG ilustrando o fluxo: coleta → envio → processamento → armazenamento. -->
+      <img src="assets/fluxo-dados.svg" alt="Fluxo: HTML coleta, JavaScript envia, PHP processa e JSON armazena" />
+    </section>
+  </main>
+
+  <!-- Rodapé simples com informação sobre o projeto. -->
+  <footer>
+    Projeto didático — Desenvolvimento para Internet • Perdi & Achei
+  </footer>
+
+  <!-- O <script> é colocado no final do <body> para que o HTML seja carregado antes
+       de o JavaScript tentar acessar os elementos da página. -->
+  <script src="script.js"></script>
+</body>
+</html>
